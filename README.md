@@ -1,24 +1,61 @@
-# Personal Research Homepage
+# Zedong Li — Academic Homepage
 
-一个无需构建工具、可以直接部署到 GitHub Pages 的个人科研主页。
+A static academic homepage built with Astro, TypeScript, and Tailwind CSS. It is configured for deployment to GitHub Pages at `https://lzd-lab.github.io/lzd-homepage/`.
 
-## 修改内容
+## Local development
 
-- 在 `index.html` 中替换姓名、简介、学校、论文、邮箱和社交链接。
-- 如需使用个人照片，将 `.portrait` 内的文字替换为 `<img src="assets/photo.jpg" alt="个人照片">`，并添加照片文件。
-- 主题颜色和排版变量位于 `styles.css` 顶部。
-
-## 部署到 GitHub Pages
-
-1. 将代码推送到名为 `你的用户名.github.io` 的 GitHub 仓库。
-2. 在仓库 `Settings → Pages` 中选择 `Deploy from a branch`。
-3. 选择 `main` 分支与 `/ (root)` 目录并保存。
-4. 稍等片刻后访问 `https://你的用户名.github.io`。
-
-本地预览可在项目目录运行：
+Requirements: Node.js 22 or later.
 
 ```bash
-python3 -m http.server 8000
+npm install
+npm run dev
 ```
 
-然后访问 `http://localhost:8000`。
+Open `http://localhost:4321`. To test a production build:
+
+```bash
+npm run build
+npm run preview
+```
+
+## Edit content
+
+All frequently edited content lives in `src/data/`:
+
+- `site.ts` — identity, biography, affiliation, research interests, education, employment, and social links
+- `publications.ts` — publications, links, and BibTeX
+- `projects.ts` — projects, tags, and links
+- `news.ts` — dated news items
+- `teaching.ts` — teaching, talks, and awards
+
+The included publications, projects, news, education, teaching, talks, and awards are explicitly marked placeholders. Replace or remove them before publishing. Social links containing `[URL]` render as disabled labels.
+
+### Replace the portrait
+
+Add a portrait to `public/portrait.jpg`, then replace the `.portrait` placeholder in `src/pages/index.astro` with:
+
+```astro
+<img class="portrait" src={`${import.meta.env.BASE_URL}portrait.jpg`} alt="Portrait of Zedong Li" />
+```
+
+### Add a CV
+
+Place the PDF at `public/cv.pdf`, set `cvPath` in `src/data/site.ts`, and add a CV link in the hero or navigation.
+
+## GitHub Pages deployment
+
+1. Push the repository to GitHub.
+2. Open **Settings → Pages**.
+3. Under **Build and deployment**, choose **GitHub Actions** as the source.
+4. Push to `main`, or run **Deploy to GitHub Pages** manually from the Actions tab.
+
+The workflow detects the repository name and builds with the correct `/lzd-homepage` base path. If the repository is renamed to an account site such as `username.github.io`, the base path is omitted automatically.
+
+## Project commands
+
+| Command | Action |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run check` | Run Astro and TypeScript checks |
+| `npm run build` | Check and build the static site |
+| `npm run preview` | Preview the production build |

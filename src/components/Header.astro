@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+const links = [
+  ['About', '#about'], ['News', '#news'], ['Publications', '#publications'],
+  ['Projects', '#projects'], ['Teaching', '#teaching'], ['Contact', '#contact'],
+];
+---
+<header class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-name" href="#top" aria-label="Go to top">{site.name}</a>
+    <nav aria-label="Primary navigation">
+      {links.map(([label, href]) => <a href={href}>{label}</a>)}
+    </nav>
+    <button class="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme">
+      <span class="theme-sun"><Icon name="sun" /></span>
+      <span class="theme-moon"><Icon name="moon" /></span>
+    </button>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  toggle?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+  });
+</script>

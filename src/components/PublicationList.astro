@@ -1,0 +1,54 @@
+---
+import Icon from './Icon.astro';
+import { publications } from '../data/publications';
+import { site } from '../data/site';
+
+const groups = Object.entries(Object.groupBy(publications, (item) => item.year))
+  .sort(([a], [b]) => Number(b) - Number(a));
+---
+<div class="publication-groups">
+  {groups.map(([year, items]) => (
+    <div class="publication-year">
+      <h3>{year}</h3>
+      <ol>
+        {items?.map((publication) => (
+          <li class="publication" data-placeholder={publication.placeholder || undefined}>
+            {publication.placeholder && <span class="placeholder-label">Placeholder</span>}
+            <p class="authors">
+              {publication.authors.map((author, index) => (
+                <>{author === site.name ? <strong>{author}</strong> : author}{index < publication.authors.length - 1 ? ', ' : ''}</>
+              ))}
+            </p>
+            <h4>{publication.title}</h4>
+            <p class="venue">{publication.venue}, {publication.year}</p>
+            <div class="publication-links">
+              {publication.links.map((link) => <a href={link.url} target="_blank" rel="noreferrer">{link.label}<Icon name="external" size={13} /></a>)}
+              <button class="bibtex-copy" type="button" data-bibtex={publication.bibtex}>
+                <span class="copy-icon"><Icon name="copy" size={14} /></span>
+                <span class="check-icon"><Icon name="check" size={14} /></span>
+                <span class="copy-label">BibTeX</span>
+              </button>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.bibtex-copy').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const value = button.dataset.bibtex;
+      if (!value) return;
+      await navigator.clipboard.writeText(value);
+      button.classList.add('copied');
+      const label = button.querySelector<HTMLElement>('.copy-label');
+      if (label) label.textContent = 'Copied';
+      window.setTimeout(() => {
+        button.classList.remove('copied');
+        if (label) label.textContent = 'BibTeX';
+      }, 1800);
+    });
+  });
+</script>

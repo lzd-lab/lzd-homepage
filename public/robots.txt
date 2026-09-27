@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lzd-lab.github.io/lzd-homepage/sitemap-index.xml
